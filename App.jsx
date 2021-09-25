@@ -4,6 +4,7 @@ import {
 	createStackNavigator,
 	CardStyleInterpolators,
 } from "@react-navigation/stack";
+import { initializeApp } from "firebase/app";
 
 import LogInScreen from "./src/screens/LogInScreen";
 import SignUpScreen from "./src/screens/SignUpScreen";
@@ -12,7 +13,11 @@ import MemoEditScreen from "./src/screens/MemoEditScreen";
 import MemoDetailScreen from "./src/screens/MemoDetailScreen";
 import MemoListScreen from "./src/screens/MemoListScreen";
 
+import { firebaseConfig } from "./env";
+
 const Stack = createStackNavigator();
+
+const app = initializeApp(firebaseConfig);
 
 export default function App() {
 	return (

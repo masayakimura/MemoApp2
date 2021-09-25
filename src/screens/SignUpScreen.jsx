@@ -5,7 +5,9 @@ import {
 	StyleSheet,
 	TextInput,
 	TouchableOpacity,
+	Alert,
 } from "react-native";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 import Button from "../components/Button";
 
@@ -13,6 +15,28 @@ export default function SignUpScreen(props) {
 	const { navigation } = props;
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+
+	function handlePress() {
+		const auth = getAuth();
+		createUserWithEmailAndPassword(auth, email, password)
+			.then((userCredential) => {
+				// Signed in
+				const user = userCredential.user;
+				console.log(user.uid);
+				// ...
+				navigation.reset({
+					index: 0,
+					routes: [{ name: "MemoList" }],
+				});
+			})
+			.catch((error) => {
+				const errorCode = error.code;
+				const errorMessage = error.message;
+				console.log(errorCode, errorMessage);
+				Alert.alert(errorCode);
+				// ..
+			});
+	}
 
 	return (
 		<View style={styles.container}>
@@ -25,9 +49,9 @@ export default function SignUpScreen(props) {
 						setEmail(text);
 					}}
 					autoCapitalize="none"
-          keyboardType="email-address"
-          placeholder="Email Address"
-          textContentType="emailAddress"
+					keyboardType="email-address"
+					placeholder="Email Address"
+					textContentType="emailAddress"
 				/>
 				<TextInput
 					style={styles.input}
@@ -36,19 +60,11 @@ export default function SignUpScreen(props) {
 						setPassword(text);
 					}}
 					autoCapitalize="none"
-          placeholder="Password"
-          secureTextEntry
-          textContentType="password"
+					placeholder="Password"
+					secureTextEntry
+					textContentType="password"
 				/>
-				<Button
-					label="Submit"
-					onPress={() => {
-						navigation.reset({
-							index: 0,
-							routes: [{ name: "MemoList" }],
-						});
-					}}
-				/>
+				<Button label="Submit" onPress={handlePress} />
 				<View style={styles.footer}>
 					<Text style={styles.footerText}>Already registered?</Text>
 					<TouchableOpacity
